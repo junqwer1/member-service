@@ -1,17 +1,29 @@
 package org.koreait.member.jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.koreait.global.exceptions.UnAuthorizedException;
+import org.koreait.member.MemberInfo;
 import org.koreait.member.services.MemberInfoService;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Lazy
 @Service
@@ -38,8 +50,18 @@ public class TokenService {
      * @return
      */
     public String create(String email) {
+        MemberInfo memberInfo = (MemberInfo) infoService.loadUserByUsername(email);
 
-        return null;
+        String authorities = memberInfo.getAuthorities().stream().map(a -> a.getAuthority()).collect(Collectors.joining("||"));
+        int validTime = properties.getValidTime() * 1000;
+        Date date = new Date((new Date()).getTime() + validTime);
+
+        return Jwts.builder()
+                .setSubject(memberInfo.getEmail())
+                .claim("authorities", authorities)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(date)
+                .compact();
     }
 
     /**
@@ -51,8 +73,24 @@ public class TokenService {
      * @return
      */
     public Authentication authenticate(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getPayload();
 
-        return null;
+        String email = claims.getSubject();
+        String authorities = (String) claims.get("authorities");
+        List<SimpleGrantedAuthority> _authorities = Arrays.stream(authorities.split("||")).map(SimpleGrantedAuthority::new).toList();
+
+        MemberInfo memberInfo = (MemberInfo) infoService.loadUserByUsername(email);
+        memberInfo.setAuthorities(_authorities);
+
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(memberInfo, null, _authorities);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication); // 로그인 처리
+
+        return authentication;
     }
 
     public Authentication authenticate(HttpServletRequest request) {

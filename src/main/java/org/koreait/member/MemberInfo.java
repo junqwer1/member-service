@@ -2,6 +2,7 @@ package org.koreait.member;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.koreait.member.entities.Member;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Getter
+@Setter
 @Builder
 @ToString
 public class MemberInfo implements UserDetails {
