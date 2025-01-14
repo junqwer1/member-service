@@ -28,7 +28,7 @@ public class LoginFilter extends GenericFilterBean {
             tokenService.authenticate((HttpServletRequest) request);
         } catch (UnAuthorizedException e) {
             HttpServletResponse res = (HttpServletResponse) response;
-            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, e. getMessage());
+            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             e.printStackTrace();
         }
 
