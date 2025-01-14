@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.exceptions.BadRequestException;
 import org.koreait.global.libs.Utils;
+import org.koreait.global.rests.JSONData;
+import org.koreait.member.jwt.TokenService;
 import org.koreait.member.services.MemberUpdateService;
 import org.koreait.member.validators.JoinValidator;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ public class MemberController {
     private final Utils utils;
     private final MemberUpdateService updateService;
     private final JoinValidator joinValidator;
+    private final TokenService tokenService;
 
     @PostMapping("/join")
     @ResponseStatus(HttpStatus.CREATED)
@@ -32,8 +35,22 @@ public class MemberController {
         updateService.process(form);
     }
 
+    /**
+     * 로그인 성공시 토큰 발급
+     *
+     * @param form
+     * @param errors
+     */
     @PostMapping("/login")
-    public void login(@RequestBody @Valid RequestLogin form, Errors errors) {
+    public JSONData login(@RequestBody @Valid RequestLogin form, Errors errors) {
 
+        if (errors.hasErrors()) {
+            throw new BadRequestException(utils.getErrorMessages(errors));
+        }
+
+        String email = form.getEmail();
+        String token = tokenService.create(email);
+
+        return new JSONData(token);
     }
 }
