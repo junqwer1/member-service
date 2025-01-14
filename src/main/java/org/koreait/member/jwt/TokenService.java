@@ -76,6 +76,10 @@ public class TokenService {
      * @return
      */
     public Authentication authenticate(String token) {
+
+//        토큰 유효성 검사
+        validate(token);
+
         Claims claims = Jwts.parser()
                 .setSigningKey(key)
                 .build()
