@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Lazy
 @Service
 @EnableConfigurationProperties(JwtProperties.class)
@@ -89,6 +88,8 @@ public class TokenService {
         String email = claims.getSubject();
         String authorities = (String) claims.get("authorities");
         List<SimpleGrantedAuthority> _authorities = Arrays.stream(authorities.split("\\|\\|")).map(SimpleGrantedAuthority::new).toList();
+        System.out.println("authorities:" + authorities);
+        System.out.println("_authorities:" + _authorities);
 
         MemberInfo memberInfo = (MemberInfo) infoService.loadUserByUsername(email);
         memberInfo.setAuthorities(_authorities);
