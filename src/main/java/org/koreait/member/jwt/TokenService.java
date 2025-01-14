@@ -52,11 +52,11 @@ public class TokenService {
      * @return
      */
     public String create(String email) {
-        MemberInfo memberInfo = (MemberInfo) infoService.loadUserByUsername(email);
+        MemberInfo memberInfo = (MemberInfo)infoService.loadUserByUsername(email);
 
         String authorities = memberInfo.getAuthorities().stream().map(a -> a.getAuthority()).collect(Collectors.joining("||"));
         int validTime = properties.getValidTime() * 1000;
-        Date date = new Date((new Date()).getTime() + validTime);
+        Date date = new Date((new Date()).getTime() + validTime); // 15분 뒤의 시간(만료 시간)
 
         return Jwts.builder()
                 .setSubject(memberInfo.getEmail())
@@ -76,7 +76,7 @@ public class TokenService {
      */
     public Authentication authenticate(String token) {
 
-//        토큰 유효성 검사
+        // 토큰 유효성 검사
         validate(token);
 
         Claims claims = Jwts.parser()
@@ -140,6 +140,7 @@ public class TokenService {
         if (StringUtils.hasText(errorCode)) {
             throw new UnAuthorizedException(utils.getMessage(errorCode));
         }
+
         if (error != null) {
             error.printStackTrace();
         }

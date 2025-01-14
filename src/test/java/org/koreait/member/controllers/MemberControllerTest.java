@@ -29,10 +29,11 @@ public class MemberControllerTest {
     private ObjectMapper om;
 
     @Test
-    void  Jointest1() throws Exception {
+    void joinTest() throws Exception {
+        // 회원 가입
         RequestJoin form = new RequestJoin();
         form.setEmail("user01@test.org");
-        form.setName("이용자01");
+        form.setName("사용자01");
         form.setPassword("_aA123456");
         form.setConfirmPassword(form.getPassword());
         form.setRequiredTerms1(true);
@@ -45,13 +46,22 @@ public class MemberControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)).andDo(print());
 
+        // 로그인 테스트 - 토큰 발급
         RequestLogin loginForm = new RequestLogin();
         loginForm.setEmail(form.getEmail());
         loginForm.setPassword(form.getPassword());
-        String body3 = om.writeValueAsString(loginForm);
-        mockMvc.perform(post("/login")
+        String loginBody = om.writeValueAsString(loginForm);
+        String body3 = mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .contentType(body3)).andDo(print()).andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+                .content(loginBody)).andDo(print()).andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
+        // 토큰으로 로그인 처리 테스트
+        /*
+        Map<String, String> data = om.readValue(body3, new TypeReference<>() {});
+        String token = data.get("data");
+
+        mockMvc.perform(get("/test")
+                .header("Authorization", "Bearer " + token))
+                .andDo(print()); */
     }
 }

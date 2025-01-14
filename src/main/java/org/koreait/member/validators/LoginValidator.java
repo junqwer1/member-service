@@ -36,15 +36,15 @@ public class LoginValidator implements Validator {
 
         RequestLogin form = (RequestLogin) target;
         String email = form.getEmail();
-        String password= form.getPassword();
+        String password = form.getPassword();
         Member member = memberRepository.findByEmail(email).orElse(null);
         if (member == null) {
             errors.reject("Mismatch.login");
             return;
         }
 
-//        비밀번호가 일치하지 않는 경우
-        if (passwordEncoder.matches(password, member.getPassword())) {
+        //  비밀번호가 일치하지 않는 경우
+        if (!passwordEncoder.matches(password, member.getPassword())) {
             errors.reject("Mismatch.login");
         }
     }

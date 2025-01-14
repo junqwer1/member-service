@@ -33,10 +33,7 @@ public class JoinValidator implements Validator, PasswordValidator {
          * 1. 이메일 중복 여부 체크
          * 2. 비밀번호 복잡성 - 알파벳 대소문자 각각 1개 이상, 숫자 1개 이상, 특수 문자 포함
          * 3. 비밀번호, 비밀번호 확인 일치 여부
-         * 4. 생년월일을 입력받으면 만 14세 이상만 가입 가능하게 통제
-         * 5. 이메일 인증 완료 여부 체크
          */
-
         String email = form.getEmail();
         String password = form.getPassword();
         String confirmPassword = form.getConfirmPassword();
@@ -45,7 +42,6 @@ public class JoinValidator implements Validator, PasswordValidator {
         if (memberRepository.exists(email)) {
             errors.rejectValue("email", "Duplicated");
         }
-
 
 
         // 2. 비밀번호 복잡성 S
@@ -59,5 +55,6 @@ public class JoinValidator implements Validator, PasswordValidator {
             errors.rejectValue("confirmPassword", "Mismatch");
         }
         // 3. 비밀번호, 비밀번호 확인 일치 여부 E
+
     }
 }

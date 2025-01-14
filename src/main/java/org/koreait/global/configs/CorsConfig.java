@@ -32,10 +32,7 @@ public class CorsConfig {
             config.setAllowCredentials(true);
         } else {
             config.addAllowedOrigin("*");
-
         }
-
-
 
         source.registerCorsConfiguration("/**", config);
 

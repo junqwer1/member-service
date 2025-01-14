@@ -23,7 +23,7 @@ public class LoginFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-//        토큰이 유입되면 로그인 처리
+        // 토큰이 유입되면 로그인 처리
         try {
             tokenService.authenticate((HttpServletRequest) request);
         } catch (UnAuthorizedException e) {

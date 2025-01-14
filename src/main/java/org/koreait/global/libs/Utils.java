@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class Utils {
-
     private final HttpServletRequest request;
     private final MessageSource messageSource;
 
@@ -36,8 +35,7 @@ public class Utils {
     }
 
     public List<String> getMessages(String[] codes) {
-//        return Arrays.stream(codes).map(this::getMessage).toList();
-//        "No message found under code 'NotBlank.requestLogin.password' for locale 'ko_KR'.",
+
         return Arrays.stream(codes).map(c -> {
             try {
                 return getMessage(c);
@@ -45,30 +43,35 @@ public class Utils {
                 return "";
             }
         }).filter(s -> !s.isBlank()).toList();
+
     }
 
-    /*
+    /**
      * REST 커맨드 객체 검증 실패시에 에러 코드를 가지고 메세지 추출
-     * */
+     *
+     * @param errors
+     * @return
+     */
     public Map<String, List<String>> getErrorMessages(Errors errors) {
         ResourceBundleMessageSource ms = (ResourceBundleMessageSource) messageSource;
 
 
-//        필드별 에러코드 - getFieldErrors() 커맨드 객체 검증 실패, rejectValue()
+            // 필드별 에러코드 - getFieldErrors()
+            // Collectors.toMap
             Map<String, List<String>> messages = errors.getFieldErrors()
                     .stream()
-                    .collect(Collectors.toMap(FieldError::getField, f -> getMessages(f.getCodes()), (v1/*기존*/, v2/*현재*/) -> v2));
-//        글로벌 에러코드 - getGlobalErrors() reject
+                    .collect(Collectors.toMap(FieldError::getField, f -> getMessages(f.getCodes()), (v1, v2) -> v2));
+
+            // 글로벌 에러코드 - getGlobalErrors()
             List<String> gMessages = errors.getGlobalErrors()
                     .stream()
                     .flatMap(o -> getMessages(o.getCodes()).stream())
                     .toList();
-//        글로벌 에러코드 필드 - global
-            if(!gMessages.isEmpty()){
+            // 글로벌 에러코드 필드 - global
+            if (!gMessages.isEmpty()) {
                 messages.put("global", gMessages);
             }
 
             return messages;
     }
-
 }

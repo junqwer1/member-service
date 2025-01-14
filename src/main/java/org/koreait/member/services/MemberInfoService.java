@@ -60,6 +60,7 @@ public class MemberInfoService implements UserDetailsService {
         return memberInfo.getMember();
     }
 
+
     /**
      * 추가 정보 처리
      * @param member

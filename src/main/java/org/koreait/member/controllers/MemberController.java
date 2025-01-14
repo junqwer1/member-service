@@ -36,7 +36,6 @@ public class MemberController {
     @PostMapping("/join")
     @ResponseStatus(HttpStatus.CREATED)
     public void join(@RequestBody @Valid RequestJoin form, Errors errors) {
-
         joinValidator.validate(form, errors);
 
         if (errors.hasErrors()) {
@@ -58,7 +57,6 @@ public class MemberController {
         loginValidator.validate(form, errors);
 
         if (errors.hasErrors()) {
-
             throw new BadRequestException(utils.getErrorMessages(errors));
         }
 
@@ -66,9 +64,11 @@ public class MemberController {
         String token = tokenService.create(email);
 
 
+
         if (StringUtils.hasText(frontDomain)) {
             String[] domains = frontDomain.split(",");
             for (String domain : domains) {
+
 
                 response.setHeader("Set-Cookie", String.format("token=%s; Path=/; Domain=%s; Secure; HttpOnly; SameSite=None", token, domain)); // SameSite: None - 다른 서버에서도 쿠키 설정 가능, Https는 필수
             }
@@ -86,5 +86,4 @@ public class MemberController {
 
         return new JSONData(memberInfo.getMember());
     }
-
 }

@@ -31,7 +31,7 @@ public class CommonControllerAdvice {
             if (errorMessages != null) {
                 message = errorMessages;
             } else {
-                message = commonException.isErrorCode() ? utils.getMessage((String) message) : message;
+                message = commonException.isErrorCode() ? utils.getMessage((String)message) : message;
             }
         }
 
@@ -44,5 +44,4 @@ public class CommonControllerAdvice {
 
         return ResponseEntity.status(status).body(data);
     }
-
 }

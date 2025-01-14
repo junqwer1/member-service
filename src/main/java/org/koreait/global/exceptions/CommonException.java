@@ -23,9 +23,11 @@ public class CommonException extends RuntimeException {
         this.status = Objects.requireNonNullElse(status, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    /*
-     * RestController 쪽에서 커맨드 객체 검증 실패시 가공한 에러 메세지 정보
-     * */
+    /**
+     * RestController에서 커맨드 객체 검증 실패시 가공한 에러 메세지 정보
+     * @param errorMessages
+     * @param status
+     */
     public CommonException(Map<String, List<String>> errorMessages, HttpStatus status) {
         this.errorMessages = errorMessages;
         this.status = status;

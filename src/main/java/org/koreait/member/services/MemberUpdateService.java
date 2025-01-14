@@ -56,6 +56,7 @@ public class MemberUpdateService {
         save(member, List.of(auth)); // 회원 저장 처리
     }
 
+
     /**
      * 회원정보 추가 또는 수정 처리
      *
@@ -84,4 +85,6 @@ public class MemberUpdateService {
 
         // 회원 권한 업데이트 처리 E
     }
+
+
 }
