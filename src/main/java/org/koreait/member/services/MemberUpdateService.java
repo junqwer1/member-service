@@ -14,6 +14,7 @@ import org.koreait.member.entities.Member;
 import org.koreait.member.entities.QAuthorities;
 import org.koreait.member.entities.TempToken;
 import org.koreait.member.exceptions.MemberNotFoundException;
+import org.koreait.member.exceptions.TempTokenNotFoundException;
 import org.koreait.member.repositories.AuthoritiesRepository;
 import org.koreait.member.repositories.MemberRepository;
 import org.modelmapper.ModelMapper;
@@ -121,6 +122,9 @@ public class MemberUpdateService implements PasswordValidator {
         String password = form.getPassword();
 
         TempToken tempToken = tempTokenService.get(token);
+        if (tempToken.getAction() == TokenAction.PASSWORD_CHANGE) {
+            throw new TempTokenNotFoundException();
+        }
 
 //        비밀번호 자리수 검증
         if (password.length() < 8) {

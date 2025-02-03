@@ -89,7 +89,7 @@ public class MemberController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/find/password")
-    public void findPassword(@Valid RequestFindPassword form, Errors errors) {
+    public void findPassword(@Valid @RequestBody RequestFindPassword form, Errors errors) {
         if (errors.hasErrors()) {
             throw new BadRequestException(utils.getErrorMessages(errors));
         }
@@ -105,7 +105,7 @@ public class MemberController {
      */
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/change/password")
-    public void changePassword(@Valid RequestChangePassword form, Errors errors) {
+    public void changePassword(@Valid @RequestBody RequestChangePassword form, Errors errors) {
         if (errors.hasErrors()) {
             throw new BadRequestException(utils.getErrorMessages(errors));
         }
