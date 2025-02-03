@@ -19,6 +19,9 @@ public class RequestJoin {
     private String name; // 회원명
 
     @NotBlank
+    private String mobile; // 휴대전화 번호
+
+    @NotBlank
     @Size(min=8)
     private String password; // 비밀번호
 

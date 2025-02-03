@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 import org.koreait.global.entities.BaseEntity;
+import org.koreait.member.constants.Authority;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -25,6 +26,9 @@ public class Member extends BaseEntity implements Serializable {
     @Column(length=40, nullable = false)
     private String name;
 
+    @Column(length = 15, nullable = false)
+    private String mobile; // 휴대전화 번호
+
     private boolean requiredTerms1;
 
     private boolean requiredTerms2;
@@ -41,4 +45,9 @@ public class Member extends BaseEntity implements Serializable {
 
     // 비밀번호 변경 일시
     private LocalDateTime credentialChangedAt;
+
+    public List<Authority> get_authorities() {
+        return authorities == null || authorities.isEmpty() ? List.of()
+                : authorities.stream().map(Authorities::getAuthority).toList();
+    }
 }
